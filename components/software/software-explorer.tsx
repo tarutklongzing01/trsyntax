@@ -7,7 +7,7 @@ import { getPublishedPrograms } from '@/lib/firebase/programs';
 import type { SoftwareProgram } from '@/types';
 import { ProgramCard } from './program-card';
 
-const filters = ['ทั้งหมด', 'ECU Tools', 'Tuning Tools', 'Downloader', 'Music Tools'];
+const filters = ['ทั้งหมด', 'File Tools', 'Productivity', 'Downloader', 'Music Tools'];
 
 export function SoftwareExplorer() {
   const [query, setQuery] = useState('');

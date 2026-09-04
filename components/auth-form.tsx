@@ -17,6 +17,7 @@ const authMessages: Record<string, string> = {
 };
 
 export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
+  const googleAuthEnabled = process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_AUTH_ENABLED === 'true';
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -43,7 +44,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     <label>อีเมล<div className="input-with-icon"><Mail/><input required value={email} onChange={(e)=>setEmail(e.target.value)} autoComplete="email" type="email" placeholder="name@example.com" /></div></label>
     <label>รหัสผ่าน<div className="input-with-icon"><LockKeyhole/><input required value={password} onChange={(e)=>setPassword(e.target.value)} autoComplete={mode==='login'?'current-password':'new-password'} type="password" minLength={6} placeholder="อย่างน้อย 6 ตัวอักษร" /></div></label>
     <Button className="auth-submit" type="submit" disabled={loading}>{loading?<LoaderCircle className="spin"/>:null}{mode==='login'?'เข้าสู่ระบบ':'สมัครสมาชิก'}</Button>
-    <div className="auth-or"><span>หรือ</span></div><Button className="google-button" type="button" variant="outline" disabled={loading} onClick={()=>void run(loginWithGoogle)}><span aria-hidden="true">G</span> ดำเนินการด้วย Google</Button>
+    {googleAuthEnabled && <><div className="auth-or"><span>หรือ</span></div><Button className="google-button" type="button" variant="outline" disabled={loading} onClick={()=>void run(loginWithGoogle)}><span aria-hidden="true">G</span> ดำเนินการด้วย Google</Button></>}
     {message&&<output className="form-message">{message}</output>}
     <p className="auth-switch">{mode==='login'?'ยังไม่มีบัญชี?':'มีบัญชีแล้ว?'} <Link href={mode==='login'?'/register':'/login'}>{mode==='login'?'สมัครสมาชิก':'เข้าสู่ระบบ'}</Link></p>
   </form>;

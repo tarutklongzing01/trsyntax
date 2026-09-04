@@ -30,7 +30,6 @@ async function syncUser(user: User, displayName?: string, isRegistration = false
   if (!userDocument.exists() || isRegistration) {
     await setDoc(userRef, {
       ...profile,
-      role: 'user',
       createdAt: serverTimestamp(),
     });
     return;

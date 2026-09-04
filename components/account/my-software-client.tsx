@@ -9,12 +9,12 @@ import { getFirebase } from '@/lib/firebase/client';
 import { getPublishedPrograms } from '@/lib/firebase/programs';
 import type { SoftwareProgram } from '@/types';
 
-type License = { programId?: string; licenseKey?: string; key?: string; status?: string };
+type Order = { productId?: string; programId?: string; licenseKey?: string; key?: string; status?: string };
 
 export function MySoftwareClient() {
   const { user, loading } = useFirebaseUser();
   const [programs, setPrograms] = useState<SoftwareProgram[]>([]);
-  const [licenses, setLicenses] = useState<License[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [libraryLoading, setLibraryLoading] = useState(true);
 
   useEffect(() => {
@@ -23,22 +23,25 @@ export function MySoftwareClient() {
     if (!firebase) return;
     void Promise.all([
       getPublishedPrograms(),
-      getDocs(query(collection(firebase.db, 'licenses'), where('userId', '==', user.uid))),
-    ]).then(([nextPrograms, licenseSnapshot]) => {
+      getDocs(query(collection(firebase.db, 'orders'), where('userId', '==', user.uid))),
+    ]).then(([nextPrograms, orderSnapshot]) => {
       setPrograms(nextPrograms);
-      setLicenses(licenseSnapshot.docs.map((item) => item.data() as License));
+      setOrders(orderSnapshot.docs.map((item) => item.data() as Order));
     }).catch(() => setPrograms([])).finally(() => setLibraryLoading(false));
   }, [user]);
 
   if (loading || (user && libraryLoading)) return <LibraryState icon={<LoaderCircle className="spin" />} title="กำลังโหลดคลังโปรแกรม..." />;
   if (!user) return <LibraryState icon={<UserRound />} title="เข้าสู่ระบบเพื่อดู My Software" description="รายการโปรแกรมแบบเสียเงินจะแสดงเมื่อบัญชีมี License ที่ใช้งานได้" action />;
 
-  const allowed = programs.filter((program) => program.type === 'FREE' || licenses.some((license) => license.programId === program.id && license.status !== 'revoked'));
+  const allowed = programs.filter((program) => program.type === 'FREE' || orders.some((order) => {
+    const productId = order.productId || order.programId;
+    return productId === program.id && !['cancelled', 'refunded'].includes(order.status || '');
+  }));
   if (!allowed.length) return <LibraryState icon={<Download />} title="ยังไม่มีโปรแกรมในคลัง" description="โปรแกรมฟรีและโปรแกรมที่ซื้อแล้วจะปรากฏที่นี่" />;
 
   return <div className="license-list">{allowed.map((program) => {
-    const license = licenses.find((item) => item.programId === program.id);
-    const licenseLabel = program.type === 'FREE' ? 'FREE LICENSE' : (license?.licenseKey || license?.key || 'ACTIVE LICENSE');
+    const order = orders.find((item) => (item.productId || item.programId) === program.id);
+    const licenseLabel = program.type === 'FREE' ? 'FREE LICENSE' : (order?.licenseKey || order?.key || 'PURCHASED');
     return <article key={program.id}><span className="license-icon">{program.name.slice(0, 2)}</span><div><p>{program.category}</p><h2>{program.name}</h2><small>Latest Version: {program.version}</small></div><div className="license-status"><KeyRound/><span>{licenseLabel}</span></div><Link className="btn btn-primary" href={`/software/${program.slug}`}><Download/> Download</Link></article>;
   })}</div>;
 }

@@ -1,46 +1,42 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    function isOwner(userId) { return signedIn() && request.auth.uid == userId; }
-    function isAdmin() {
-      return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    function signedIn() {
+      return request.auth != null;
     }
 
-    match /users/{userId} {
-      allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && request.resource.data.role == 'user';
-      allow update: if (isOwner(userId) && request.resource.data.role == resource.data.role) || isAdmin();
-      allow delete: if isAdmin();
+    function admin() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
-    match /programs/{programId} {
-      allow read: if resource.data.published == true || isAdmin();
-      allow write: if isAdmin();
-    }
-    match /programVersions/{versionId} {
-      allow read: if resource.data.published == true || isAdmin();
-      allow write: if isAdmin();
-    }
-    match /categories/{categoryId} {
+
+    match /products/{id} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow write: if admin();
     }
-    match /guides/{guideId} {
-      allow read: if resource.data.published == true || isAdmin();
-      allow write: if isAdmin();
+
+    match /packages/{id} {
+      allow read: if true;
+      allow write: if admin();
     }
-    match /licenses/{licenseId} {
-      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow write: if isAdmin();
+
+    match /users/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+      allow read: if admin();
     }
-    match /downloads/{downloadId} {
+
+    match /orders/{id} {
       allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
-      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
-      allow update, delete: if isAdmin();
+      allow read: if admin() || (signedIn() && resource.data.userId == request.auth.uid);
+      allow update, delete: if admin();
     }
-    match /settings/{settingId} {
-      allow read: if true;
-      allow write: if isAdmin();
+
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if admin();
+    }
+
+    match /hwidLicenses/{id} {
+      allow read, write: if admin();
     }
   }
 }

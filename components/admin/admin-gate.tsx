@@ -17,12 +17,12 @@ export function AdminGate() {
     if (!user) return;
     const firebase = getFirebase();
     if (!firebase) return;
-    void getDoc(doc(firebase.db, 'users', user.uid)).then((snapshot) => setRole(snapshot.data()?.role || 'user')).catch(() => setRole('user')).finally(() => setCheckingRole(false));
+    void getDoc(doc(firebase.db, 'admins', user.uid)).then((snapshot) => setRole(snapshot.exists() ? 'admin' : 'user')).catch(() => setRole('user')).finally(() => setCheckingRole(false));
   }, [user]);
 
   if (loading || (user && checkingRole)) return <AdminState loading title="กำลังตรวจสอบสิทธิ์ผู้ดูแล..." />;
   if (!user) return <AdminState title="กรุณาเข้าสู่ระบบก่อน" action="เข้าสู่ระบบ" />;
-  if (role !== 'admin') return <AdminState title="บัญชีนี้ไม่มีสิทธิ์ผู้ดูแล" description="ต้องกำหนด role เป็น admin ในเอกสารผู้ใช้บน Firestore" action="กลับไปบัญชีของฉัน" href="/account" />;
+  if (role !== 'admin') return <AdminState title="บัญชีนี้ไม่มีสิทธิ์ผู้ดูแล" description="ต้องมีเอกสาร UID ของบัญชีนี้ในคอลเลกชัน admins บน Firestore" action="กลับไปบัญชีของฉัน" href="/account" />;
   return <AdminShell />;
 }
 

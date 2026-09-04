@@ -11,23 +11,15 @@ import { Button } from '@/components/ui/button';
 
 export function AccountDashboard() {
   const { user, loading, configured } = useFirebaseUser();
-  const [licenseCount, setLicenseCount] = useState(0);
-  const [downloadCount, setDownloadCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
 
   useEffect(() => {
     if (!user) return;
     const firebase = getFirebase();
     if (!firebase) return;
-    void Promise.all([
-      getDocs(query(collection(firebase.db, 'licenses'), where('userId', '==', user.uid))),
-      getDocs(query(collection(firebase.db, 'downloads'), where('userId', '==', user.uid))),
-    ]).then(([licenses, downloads]) => {
-      setLicenseCount(licenses.size);
-      setDownloadCount(downloads.size);
-    }).catch(() => {
-      setLicenseCount(0);
-      setDownloadCount(0);
-    });
+    void getDocs(query(collection(firebase.db, 'orders'), where('userId', '==', user.uid)))
+      .then((orders) => setOrderCount(orders.size))
+      .catch(() => setOrderCount(0));
   }, [user]);
 
   if (loading) return <AccountState icon={<LoaderCircle className="spin" />} title="กำลังตรวจสอบบัญชี..." />;
@@ -38,8 +30,8 @@ export function AccountDashboard() {
   const links = [
     [UserRound, 'Profile', 'ข้อมูลส่วนตัวและการเข้าสู่ระบบ', '/account'],
     [Download, 'My Software', 'โปรแกรมที่ซื้อและดาวน์โหลดได้', '/account/software'],
-    [KeyRound, 'Licenses', `${licenseCount} License ในบัญชี`, '/account/software'],
-    [Clock3, 'Download History', `${downloadCount} รายการดาวน์โหลด`, '/account/software'],
+    [KeyRound, 'Licenses', `${orderCount} รายการสั่งซื้อในบัญชี`, '/account/software'],
+    [Clock3, 'Order History', `${orderCount} รายการสั่งซื้อทั้งหมด`, '/account/software'],
   ] as const;
 
   return <section className="shell content-section account-grid">

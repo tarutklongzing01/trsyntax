@@ -2,24 +2,24 @@ import type { SoftwareProgram } from '@/types';
 
 export const programs: SoftwareProgram[] = [
   {
-    id: 'hondaflash', name: 'HondaFlash', slug: 'hondaflash', version: 'v1.2.0',
-    description: 'อ่าน / เขียนกล่อง Honda ผ่าน K-Line',
-    longDescription: 'เครื่องมือสื่อสารกับ ECU Honda สำหรับช่างและนักจูน รองรับการตรวจจับกล่อง อ่าน และเขียนข้อมูลผ่าน K-Line พร้อมระบบตรวจสอบความถูกต้องก่อนทำงาน',
-    category: 'ECU Tools', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'UPDATED',
+    id: 'tr-file-tools', name: 'TR File Tools', slug: 'tr-file-tools', version: 'v1.2.0',
+    description: 'จัดระเบียบ เปลี่ยนชื่อ และบีบอัดไฟล์จำนวนมาก',
+    longDescription: 'เครื่องมือจัดการไฟล์สำหรับงานประจำวัน รวมการเปลี่ยนชื่อเป็นชุด จัดโฟลเดอร์ ค้นหาไฟล์ซ้ำ และบีบอัดไฟล์ไว้ในหน้าต่างเดียว',
+    category: 'File Tools', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'UPDATED',
     fileSize: '24.8 MB', releaseDate: '18 ส.ค. 2026', updatedAt: '18 ส.ค. 2026', developer: 'TR-SYNTAX',
-    features: ['ECU Detection อัตโนมัติ', 'อ่านและเขียนผ่าน K-Line', 'ตรวจสอบไฟล์ก่อนเขียน', 'บันทึก Log ทุกขั้นตอน'],
-    requirements: ['Windows 10 / 11 (64-bit)', 'RAM 4 GB ขึ้นไป', 'USB K-Line Adapter'],
-    changelog: ['เพิ่ม ECU Detection', 'ปรับปรุง K-Line Communication', 'แก้ Bug การเชื่อมต่อ', 'ปรับ UI'], accent: '#ef4444',
+    features: ['เปลี่ยนชื่อไฟล์หลายรายการ', 'จัดไฟล์เข้าโฟลเดอร์อัตโนมัติ', 'ค้นหาไฟล์ซ้ำ', 'บีบอัด ZIP ในคลิกเดียว'],
+    requirements: ['Windows 10 / 11 (64-bit)', 'RAM 4 GB ขึ้นไป', 'พื้นที่ว่าง 100 MB'],
+    changelog: ['เพิ่มระบบค้นหาไฟล์ซ้ำ', 'ปรับปรุงการจัดโฟลเดอร์', 'แก้ปัญหาชื่อไฟล์ภาษาไทย', 'ปรับ UI'], accent: '#ef4444',
   },
   {
-    id: 'tr-ecu-editor', name: 'TR ECU Editor', slug: 'tr-ecu-editor', version: 'v0.9.1',
-    description: 'แก้ไข Map คำนวณค่า และแสดงกราฟ ECU',
-    longDescription: 'พื้นที่ทำงานสำหรับวิเคราะห์และแก้ไขแผนที่ ECU พร้อมตาราง กราฟ และเครื่องมือคำนวณที่ช่วยลดขั้นตอนงานจูนซ้ำ ๆ',
-    category: 'Tuning Tools', platform: 'Windows 10 / 11', price: 890, type: 'PAID', status: 'NEW',
+    id: 'tr-image-tools', name: 'TR Image Tools', slug: 'tr-image-tools', version: 'v0.9.1',
+    description: 'ย่อขนาด แปลงไฟล์ และใส่ลายน้ำให้รูปภาพ',
+    longDescription: 'พื้นที่ทำงานสำหรับจัดการรูปภาพหลายไฟล์พร้อมกัน รองรับการย่อขนาด แปลงรูปแบบ ปรับคุณภาพ และใส่ลายน้ำโดยไม่ต้องเปิดแก้ทีละรูป',
+    category: 'Productivity', platform: 'Windows 10 / 11', price: 890, type: 'PAID', status: 'NEW',
     fileSize: '42.1 MB', releaseDate: '2 ก.ย. 2026', updatedAt: '2 ก.ย. 2026', developer: 'TR-SYNTAX',
-    features: ['2D / 3D Map View', 'Checksum Calculator', 'Compare Files', 'Preset Manager'],
+    features: ['Batch Resize', 'แปลง JPG / PNG / WebP', 'ใส่ลายน้ำอัตโนมัติ', 'บันทึก Preset'],
     requirements: ['Windows 10 / 11 (64-bit)', 'RAM 8 GB ขึ้นไป', 'พื้นที่ว่าง 200 MB'],
-    changelog: ['เพิ่ม 3D Map View', 'เพิ่มระบบ Compare', 'ปรับปรุงความเร็วการเปิดไฟล์'], accent: '#f97316',
+    changelog: ['เพิ่ม WebP', 'เพิ่มระบบ Watermark', 'ปรับปรุงความเร็วการประมวลผล'], accent: '#f97316',
   },
   {
     id: 'tr-yt-downloader', name: 'TR-YT Downloader', slug: 'tr-yt-downloader', version: 'v1.0.3',
@@ -44,7 +44,7 @@ export const programs: SoftwareProgram[] = [
 ];
 
 export const categories = [
-  ['ECU Tools', 'จูน / แก้ไข / ปลดล็อก'], ['Tuning Tools', 'ช่วยจูน วิเคราะห์ข้อมูล'],
+  ['File Tools', 'จัดระเบียบและจัดการไฟล์'], ['Productivity', 'ช่วยให้งานประจำวันเร็วขึ้น'],
   ['Downloader', 'ดาวน์โหลดสื่อออนไลน์'], ['Music Tools', 'โปรแกรมเกี่ยวกับเสียง / Mastering'],
   ['Utilities', 'เครื่องมือทั่วไป'], ['All Programs', 'ดูโปรแกรมทั้งหมด'],
 ] as const;

@@ -11,8 +11,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: { default: 'TR-SYNTAX Software Store', template: '%s | TR-SYNTAX' },
-  description: 'รวมโปรแกรมและเครื่องมือจาก TR-SYNTAX',
-  openGraph: { title: 'TR-SYNTAX Software Store', description: 'รวมโปรแกรมและเครื่องมือจาก TR-SYNTAX', type: 'website' },
+  description: 'รวมโปรแกรมใช้งานจริงสำหรับจัดการไฟล์ รูปภาพ ดาวน์โหลด งานเสียง และงานประจำวันจาก TR-SYNTAX',
+  openGraph: { title: 'TR-SYNTAX Software Store', description: 'โปรแกรมใช้งานง่ายสำหรับทุกงานในชีวิตประจำวัน', type: 'website' },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
