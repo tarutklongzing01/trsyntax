@@ -1,0 +1,20 @@
+'use client';
+
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
+export function ScreenshotGallery({ name }: { name: string }) {
+  const labels = ['Main Workspace', 'Live Data View', 'Settings & Logs'];
+  return <div className="screenshot-grid">{labels.map((label,i)=><Dialog key={label}>
+    <DialogTrigger className="screenshot-trigger" aria-label={`เปิดภาพ ${label}`}>
+      <MockScreenshot name={name} label={label} variant={i} />
+    </DialogTrigger>
+    <DialogContent className="gallery-dialog">
+      <DialogTitle>{name} — {label}</DialogTitle><DialogDescription>ตัวอย่างหน้าจอโปรแกรมสำหรับรอบ Mock Data</DialogDescription>
+      <MockScreenshot name={name} label={label} variant={i} />
+    </DialogContent>
+  </Dialog>)}</div>;
+}
+
+function MockScreenshot({ name, label, variant }: { name:string; label:string; variant:number }) {
+  return <div className={`mock-shot shot-${variant}`}><div className="mock-bar"><i/><i/><i/><b>{name}</b></div><div className="mock-body"><aside><i/><i/><i/><i/></aside><section><small>{label}</small><h4>{variant===1?'LIVE DATA STREAM':variant===2?'APPLICATION SETTINGS':'PROJECT WORKSPACE'}</h4><div className="mock-metrics"><i/><i/><i/></div><div className="mock-graph">{[35,65,45,85,60,92,72,50].map((h,n)=><i key={n} style={{height:`${h}%`}}/>)}</div></section></div></div>;
+}
