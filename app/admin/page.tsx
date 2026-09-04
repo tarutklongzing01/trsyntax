@@ -1,4 +1,4 @@
 import type { Metadata } from 'next';
-import { AdminShell } from '@/components/admin/admin-shell';
+import { AdminGate } from '@/components/admin/admin-gate';
 export const metadata:Metadata={title:'Admin Dashboard'};
-export default function Admin(){return <AdminShell/>}
+export default function Admin(){return <AdminGate/>}

@@ -1,8 +1,10 @@
 'use client';
 
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { programs } from '@/lib/mock-data';
+import { getPublishedPrograms } from '@/lib/firebase/programs';
+import type { SoftwareProgram } from '@/types';
 import { ProgramCard } from './program-card';
 
 const filters = ['ทั้งหมด', 'ECU Tools', 'Tuning Tools', 'Downloader', 'Music Tools'];
@@ -10,10 +12,16 @@ const filters = ['ทั้งหมด', 'ECU Tools', 'Tuning Tools', 'Download
 export function SoftwareExplorer() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('ทั้งหมด');
-  const found = useMemo(() => programs.filter((p) => {
+  const [availablePrograms, setAvailablePrograms] = useState<SoftwareProgram[]>(programs);
+
+  useEffect(() => {
+    void getPublishedPrograms().then(setAvailablePrograms);
+  }, []);
+
+  const found = useMemo(() => availablePrograms.filter((p) => {
     const text = `${p.name} ${p.description} ${p.category}`.toLowerCase();
     return text.includes(query.toLowerCase()) && (category === 'ทั้งหมด' || p.category === category);
-  }), [query, category]);
+  }), [availablePrograms, query, category]);
 
   return <>
     <div className="explorer-toolbar">

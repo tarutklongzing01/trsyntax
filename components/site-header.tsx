@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Menu, Search, ShoppingBag, UserRound, X } from 'lucide-react';
 import { useState } from 'react';
+import { useFirebaseUser } from '@/hooks/use-firebase-user';
 
 const links = [
   ['หน้าแรก', '/'], ['โปรแกรมทั้งหมด', '/software'], ['หมวดหมู่', '/#categories'],
@@ -11,6 +12,7 @@ const links = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { user } = useFirebaseUser();
   return (
     <header className="site-header">
       <div className="shell header-inner">
@@ -22,7 +24,7 @@ export function SiteHeader() {
         </nav>
         <div className="header-actions">
           <Link href="/software" className="icon-button" aria-label="ค้นหา"><Search size={19} /></Link>
-          <Link href="/login" className="icon-button desktop-only" aria-label="เข้าสู่ระบบ"><UserRound size={19} /></Link>
+          <Link href={user ? '/account' : '/login'} className="icon-button desktop-only" aria-label={user ? 'บัญชีของฉัน' : 'เข้าสู่ระบบ'} title={user?.displayName || user?.email || 'เข้าสู่ระบบ'}><UserRound size={19} /></Link>
           <Link href="/account/software" className="cart-button"><ShoppingBag size={18} /><span>My Software</span></Link>
           <button className="menu-button" aria-label={open ? 'ปิดเมนู' : 'เปิดเมนู'} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
         </div>

@@ -1,4 +1,2 @@
-import Link from 'next/link';
-import { Download, KeyRound } from 'lucide-react';
-import { programs } from '@/lib/mock-data';
-export default function MySoftware(){return <main className="page-shell"><div className="shell page-hero"><p className="eyebrow">MY LIBRARY</p><h1>My Software</h1><p>โปรแกรมที่คุณมีสิทธิ์ใช้งานและเวอร์ชันล่าสุด</p></div><section className="shell content-section"><div className="license-list">{programs.slice(0,2).map((p,i)=><article key={p.id}><span className="license-icon">{p.name.slice(0,2)}</span><div><p>{p.category}</p><h2>{p.name}</h2><small>Latest Version: {p.version}</small></div><div className="license-status"><KeyRound/><span>{i===0?'FREE LICENSE':'TRS-ECU-2026-••••'}</span></div><Link className="btn btn-primary" href={`/software/${p.slug}`}><Download/> Download</Link></article>)}</div></section></main>}
+import { MySoftwareClient } from '@/components/account/my-software-client';
+export default function MySoftware(){return <main className="page-shell"><div className="shell page-hero"><p className="eyebrow">MY LIBRARY</p><h1>My Software</h1><p>โปรแกรมที่คุณมีสิทธิ์ใช้งานและเวอร์ชันล่าสุด</p></div><section className="shell content-section"><MySoftwareClient /></section></main>}

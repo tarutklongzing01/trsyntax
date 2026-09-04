@@ -6,6 +6,11 @@ import { getFirebase } from './client';
 export async function getPublishedPrograms(): Promise<SoftwareProgram[]> {
   const firebase = getFirebase();
   if (!firebase) return mockPrograms;
-  const snapshot = await getDocs(query(collection(firebase.db, 'programs'), where('published', '==', true)));
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as SoftwareProgram);
+  try {
+    const snapshot = await getDocs(query(collection(firebase.db, 'programs'), where('published', '==', true)));
+    if (snapshot.empty) return mockPrograms;
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as SoftwareProgram);
+  } catch {
+    return mockPrograms;
+  }
 }
