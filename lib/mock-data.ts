@@ -12,14 +12,14 @@ export const programs: SoftwareProgram[] = [
     changelog: ['ปรับระบบดึงข้อมูลวิดีโอ', 'เพิ่มตัวเลือกคุณภาพเสียง', 'ปรับปรุงความเสถียร', 'ปรับ UI'], accent: '#ef4444',
   },
   {
-    id: 'tr-image-tools', name: 'TR Image Tools', slug: 'tr-image-tools', version: 'v0.9.1',
-    description: 'ย่อขนาด แปลงไฟล์ และใส่ลายน้ำให้รูปภาพ',
-    longDescription: 'พื้นที่ทำงานสำหรับจัดการรูปภาพหลายไฟล์พร้อมกัน รองรับการย่อขนาด แปลงรูปแบบ ปรับคุณภาพ และใส่ลายน้ำโดยไม่ต้องเปิดแก้ทีละรูป',
-    category: 'Productivity', platform: 'Windows 10 / 11', price: 890, type: 'PAID', status: 'NEW',
-    fileSize: '42.1 MB', releaseDate: '2 ก.ย. 2026', updatedAt: '2 ก.ย. 2026', developer: 'TR-SYNTAX',
-    features: ['Batch Resize', 'แปลง JPG / PNG / WebP', 'ใส่ลายน้ำอัตโนมัติ', 'บันทึก Preset'],
-    requirements: ['Windows 10 / 11 (64-bit)', 'RAM 8 GB ขึ้นไป', 'พื้นที่ว่าง 200 MB'],
-    changelog: ['เพิ่ม WebP', 'เพิ่มระบบ Watermark', 'ปรับปรุงความเร็วการประมวลผล'], accent: '#f97316',
+    id: 'pdf-merger', name: 'PDF Merger', slug: 'pdf-merger', version: 'v1.0.0', image: '/images/pdf-merger.png',
+    description: 'รวมไฟล์ PDF จากเครื่องและ URL ให้เป็นไฟล์เดียว',
+    longDescription: 'เครื่องมือรวมไฟล์ PDF ที่ใช้งานง่าย รองรับการเพิ่มไฟล์จากเครื่องและวาง URL จัดลำดับเอกสาร ลบรายการ และรวมเป็น PDF เดียวได้ในไม่กี่ขั้นตอน',
+    category: 'PDF Tools', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'NEW',
+    fileSize: '18.6 MB', releaseDate: '5 ก.ย. 2026', updatedAt: '5 ก.ย. 2026', developer: 'TR-SYNTAX',
+    features: ['เพิ่มไฟล์ PDF จากเครื่อง', 'เพิ่มไฟล์ผ่าน URL', 'จัดลำดับเอกสารก่อนรวม', 'ลบรายการที่เลือกหรือล้างทั้งหมด'],
+    requirements: ['Windows 10 / 11 (64-bit)', 'RAM 4 GB ขึ้นไป', 'เชื่อมต่ออินเทอร์เน็ตเมื่อใช้ URL'],
+    changelog: ['เปิดตัว PDF Merger รุ่นแรก', 'รองรับไฟล์ PDF จาก URL', 'เพิ่มระบบจัดลำดับเอกสาร'], accent: '#ef233c',
   },
   {
     id: 'tr-yt-downloader', name: 'TR-YT Downloader', slug: 'tr-yt-downloader', version: 'v1.0.3',
@@ -44,7 +44,7 @@ export const programs: SoftwareProgram[] = [
 ];
 
 export const categories = [
-  ['File Tools', 'จัดระเบียบและจัดการไฟล์'], ['Productivity', 'ช่วยให้งานประจำวันเร็วขึ้น'],
+  ['File Tools', 'จัดระเบียบและจัดการไฟล์'], ['PDF Tools', 'รวมและจัดการเอกสาร PDF'],
   ['Downloader', 'ดาวน์โหลดสื่อออนไลน์'], ['Music Tools', 'โปรแกรมเกี่ยวกับเสียง / Mastering'],
   ['Utilities', 'เครื่องมือทั่วไป'], ['All Programs', 'ดูโปรแกรมทั้งหมด'],
 ] as const;
