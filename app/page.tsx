@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, BriefcaseBusiness, CheckCircle2, Download, Files, Headphones, ShieldCheck, Sparkles, Wrench } from 'lucide-react';
 import { ProgramCard } from '@/components/software/program-card';
-import { categories, programs } from '@/lib/mock-data';
+import { categories, visiblePrograms } from '@/lib/mock-data';
 
 const categoryIcons = [Files, BriefcaseBusiness, Download, Headphones, Wrench, ArrowRight];
 
@@ -22,7 +22,7 @@ export default function Home() {
     <section className="section shell" id="categories"><div className="section-head"><div><p className="eyebrow">EXPLORE BY CATEGORY</p><h2>เลือกเครื่องมือที่ใช่</h2></div><Link href="/software">ดูทั้งหมด <ArrowRight size={17} /></Link></div>
       <div className="category-grid">{categories.map(([title,desc],i)=>{const Icon=categoryIcons[i];return <Link href={title==='All Programs'?'/software':`/software?category=${encodeURIComponent(title)}`} className="category-card" key={title}><span className="category-icon"><Icon /></span><div><h3>{title}</h3><p>{desc}</p></div><ArrowRight className="category-arrow" /></Link>})}</div>
     </section>
-    <section className="section shell" id="featured"><div className="section-head"><div><p className="eyebrow">FEATURED SOFTWARE</p><h2>โปรแกรมแนะนำ</h2><p>เครื่องมือที่สร้างมาเพื่อให้งานเร็วขึ้นและแม่นยำกว่าเดิม</p></div><Link href="/software">โปรแกรมทั้งหมด <ArrowRight size={17} /></Link></div><div className="program-grid">{programs.map(p=><ProgramCard key={p.id} program={p} />)}</div></section>
+    <section className="section shell" id="featured"><div className="section-head"><div><p className="eyebrow">FEATURED SOFTWARE</p><h2>โปรแกรมแนะนำ</h2><p>เครื่องมือที่สร้างมาเพื่อให้งานเร็วขึ้นและแม่นยำกว่าเดิม</p></div><Link href="/software">โปรแกรมทั้งหมด <ArrowRight size={17} /></Link></div><div className="program-grid">{visiblePrograms.map(p=><ProgramCard key={p.id} program={p} />)}</div></section>
     <section className="cta-section shell" id="contact"><div><p className="eyebrow">TR-SYNTAX SUPPORT</p><h2>ติดตั้งไม่เป็น หรือใช้งานติดขัด?</h2><p>ดูคู่มือแบบทีละขั้นตอน หรือติดต่อทีมพัฒนาได้โดยตรง</p></div><div><Link className="btn btn-outline btn-lg" href="/guides">เปิดคู่มือ / Guide</Link><a className="btn btn-primary btn-lg" href="mailto:support@trsyntax.dev">ติดต่อเรา</a></div></section>
     <footer><div className="shell footer-inner"><div><strong>TR-SYNTAX</strong><span>SOFTWARE STORE</span></div><p>© 2026 TR-SYNTAX. Tools for everyday work.</p></div></footer>
   </main>;

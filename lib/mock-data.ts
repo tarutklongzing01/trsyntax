@@ -43,6 +43,9 @@ export const programs: SoftwareProgram[] = [
   },
 ];
 
+export const visibleProgramSlugs = new Set(['tr-syntax-dl', 'pdf-merger']);
+export const visiblePrograms = programs.filter((program) => visibleProgramSlugs.has(program.slug));
+
 export const categories = [
   ['File Tools', 'จัดระเบียบและจัดการไฟล์'], ['PDF Tools', 'รวมและจัดการเอกสาร PDF'],
   ['Downloader', 'ดาวน์โหลดสื่อออนไลน์'], ['Music Tools', 'โปรแกรมเกี่ยวกับเสียง / Mastering'],

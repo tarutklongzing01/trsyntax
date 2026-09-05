@@ -2,7 +2,7 @@
 
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { programs } from '@/lib/mock-data';
+import { visiblePrograms, visibleProgramSlugs } from '@/lib/mock-data';
 import { getPublishedPrograms } from '@/lib/firebase/programs';
 import type { SoftwareProgram } from '@/types';
 import { ProgramCard } from './program-card';
@@ -12,10 +12,12 @@ const filters = ['ทั้งหมด', 'File Tools', 'PDF Tools', 'Downloader
 export function SoftwareExplorer() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('ทั้งหมด');
-  const [availablePrograms, setAvailablePrograms] = useState<SoftwareProgram[]>(programs);
+  const [availablePrograms, setAvailablePrograms] = useState<SoftwareProgram[]>(visiblePrograms);
 
   useEffect(() => {
-    void getPublishedPrograms().then(setAvailablePrograms);
+    void getPublishedPrograms().then((items) => {
+      setAvailablePrograms(items.filter((program) => visibleProgramSlugs.has(program.slug)));
+    });
   }, []);
 
   const found = useMemo(() => availablePrograms.filter((p) => {
