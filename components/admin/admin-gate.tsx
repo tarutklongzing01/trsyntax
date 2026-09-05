@@ -8,7 +8,7 @@ import { useFirebaseUser } from '@/hooks/use-firebase-user';
 import { getFirebase } from '@/lib/firebase/client';
 import { AdminShell } from './admin-shell';
 
-export function AdminGate() {
+export function AdminGate({ initialView = 'dashboard' }: { initialView?: 'dashboard' | 'hwid' }) {
   const { user, loading } = useFirebaseUser();
   const [role, setRole] = useState<string | null>(null);
   const [checkingRole, setCheckingRole] = useState(true);
@@ -23,7 +23,7 @@ export function AdminGate() {
   if (loading || (user && checkingRole)) return <AdminState loading title="กำลังตรวจสอบสิทธิ์ผู้ดูแล..." />;
   if (!user) return <AdminState title="กรุณาเข้าสู่ระบบก่อน" action="เข้าสู่ระบบ" />;
   if (role !== 'admin') return <AdminState title="บัญชีนี้ไม่มีสิทธิ์ผู้ดูแล" description="ต้องมีเอกสาร UID ของบัญชีนี้ในคอลเลกชัน admins บน Firestore" action="กลับไปบัญชีของฉัน" href="/account" />;
-  return <AdminShell />;
+  return <AdminShell initialView={initialView} />;
 }
 
 function AdminState({ loading, title, description, action, href = '/login' }: { loading?: boolean; title: string; description?: string; action?: string; href?: string }) {
