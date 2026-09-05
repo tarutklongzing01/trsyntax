@@ -2,14 +2,14 @@ import type { SoftwareProgram } from '@/types';
 
 export const programs: SoftwareProgram[] = [
   {
-    id: 'tr-file-tools', name: 'TR File Tools', slug: 'tr-file-tools', version: 'v1.2.0',
-    description: 'จัดระเบียบ เปลี่ยนชื่อ และบีบอัดไฟล์จำนวนมาก',
-    longDescription: 'เครื่องมือจัดการไฟล์สำหรับงานประจำวัน รวมการเปลี่ยนชื่อเป็นชุด จัดโฟลเดอร์ ค้นหาไฟล์ซ้ำ และบีบอัดไฟล์ไว้ในหน้าต่างเดียว',
-    category: 'File Tools', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'UPDATED',
+    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.4.0',
+    description: 'ดาวน์โหลดวิดีโอและเพลงจาก YouTube เป็น MP3 / MP4',
+    longDescription: 'โปรแกรมดาวน์โหลดวิดีโอและเพลงจาก YouTube ที่ใช้งานง่าย รองรับ MP3 และ MP4 พร้อมเลือกคุณภาพวิดีโอ คุณภาพเสียง และโฟลเดอร์ปลายทางได้ตามต้องการ',
+    category: 'Downloader', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'UPDATED',
     fileSize: '24.8 MB', releaseDate: '18 ส.ค. 2026', updatedAt: '18 ส.ค. 2026', developer: 'TR-SYNTAX',
-    features: ['เปลี่ยนชื่อไฟล์หลายรายการ', 'จัดไฟล์เข้าโฟลเดอร์อัตโนมัติ', 'ค้นหาไฟล์ซ้ำ', 'บีบอัด ZIP ในคลิกเดียว'],
-    requirements: ['Windows 10 / 11 (64-bit)', 'RAM 4 GB ขึ้นไป', 'พื้นที่ว่าง 100 MB'],
-    changelog: ['เพิ่มระบบค้นหาไฟล์ซ้ำ', 'ปรับปรุงการจัดโฟลเดอร์', 'แก้ปัญหาชื่อไฟล์ภาษาไทย', 'ปรับ UI'], accent: '#ef4444',
+    features: ['ดาวน์โหลดวิดีโอ MP4', 'แยกเสียงเป็น MP3', 'เลือกคุณภาพวิดีโอและเสียง', 'ดูประวัติการดาวน์โหลด'],
+    requirements: ['Windows 10 / 11 (64-bit)', 'RAM 4 GB ขึ้นไป', 'เชื่อมต่ออินเทอร์เน็ต'],
+    changelog: ['ปรับระบบดึงข้อมูลวิดีโอ', 'เพิ่มตัวเลือกคุณภาพเสียง', 'ปรับปรุงความเสถียร', 'ปรับ UI'], accent: '#ef4444',
   },
   {
     id: 'tr-image-tools', name: 'TR Image Tools', slug: 'tr-image-tools', version: 'v0.9.1',
