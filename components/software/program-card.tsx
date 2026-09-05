@@ -3,11 +3,12 @@ import { ArrowUpRight, Download, Monitor } from 'lucide-react';
 import type { SoftwareProgram } from '@/types';
 
 export function ProgramCard({ program }: { program: SoftwareProgram }) {
+  const hasImage = Boolean(program.image);
+
   return (
     <article className="program-card">
-      <div className="program-visual" style={{ '--accent': program.accent } as React.CSSProperties}>
-        <div className="window-dots"><i /><i /><i /></div><span className="program-code">{program.name.slice(0, 2).toUpperCase()}</span>
-        <div className="visual-lines"><i /><i /><i /></div>
+      <div className={`program-visual${hasImage ? ' has-image' : ''}`} style={{ '--accent': program.accent } as React.CSSProperties}>
+        {hasImage ? <img className="program-screenshot" src={program.image} alt={`หน้าจอโปรแกรม ${program.name}`} /> : <><div className="window-dots"><i /><i /><i /></div><span className="program-code">{program.name.slice(0, 2).toUpperCase()}</span><div className="visual-lines"><i /><i /><i /></div></>}
         <span className={`status-badge ${program.status.toLowerCase()}`}>{program.status}</span>
       </div>
       <div className="program-content">

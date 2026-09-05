@@ -2,7 +2,7 @@ import type { SoftwareProgram } from '@/types';
 
 export const programs: SoftwareProgram[] = [
   {
-    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.4.0',
+    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.4.0', image: '/images/tr-syntax-dl-v1.4.0.png',
     description: 'ดาวน์โหลดวิดีโอและเพลงจาก YouTube เป็น MP3 / MP4',
     longDescription: 'โปรแกรมดาวน์โหลดวิดีโอและเพลงจาก YouTube ที่ใช้งานง่าย รองรับ MP3 และ MP4 พร้อมเลือกคุณภาพวิดีโอ คุณภาพเสียง และโฟลเดอร์ปลายทางได้ตามต้องการ',
     category: 'Downloader', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'UPDATED',

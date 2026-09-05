@@ -21,4 +21,5 @@ export interface SoftwareProgram {
   requirements: string[];
   changelog: string[];
   accent: string;
+  image?: string;
 }
