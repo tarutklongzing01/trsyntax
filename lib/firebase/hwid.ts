@@ -22,7 +22,16 @@ export interface NewHwidLicense {
   email: string;
   programId: string;
   programName: string;
-  expiresAt: string;
+  expiresAt: Date | null;
+}
+
+export interface HwidLicenseUpdate {
+  customerName: string;
+  email: string;
+  programId: string;
+  programName: string;
+  status: HwidLicenseStatus;
+  expiresAt?: Date | null;
 }
 
 function requireFirebase() {
@@ -32,12 +41,14 @@ function requireFirebase() {
 }
 
 function asDate(value: unknown): Date | null {
-  if (value && typeof value === 'object' && 'toDate' in value && typeof value.toDate === 'function') return value.toDate();
+  let date: Date | null = null;
+  if (value && typeof value === 'object' && 'toDate' in value && typeof value.toDate === 'function') date = value.toDate();
   if (typeof value === 'string' || typeof value === 'number') {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? null : date;
+    const parsed = new Date(value);
+    date = Number.isNaN(parsed.getTime()) ? null : parsed;
   }
-  return null;
+  if (date && date.getFullYear() >= 2400) date.setFullYear(date.getFullYear() - 543);
+  return date;
 }
 
 function mapLicense(snapshot: QueryDocumentSnapshot<DocumentData>): HwidLicense {
@@ -74,9 +85,21 @@ export async function createHwidLicense(input: NewHwidLicense) {
     programId: input.programId, productId: input.programId,
     programName: input.programName, productName: input.programName,
     hwid: '', machineId: '', status: 'active', active: true,
-    expiresAt: input.expiresAt ? new Date(`${input.expiresAt}T23:59:59`) : null,
+    expiresAt: input.expiresAt,
     createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
   });
+}
+
+export async function updateHwidLicense(id: string, input: HwidLicenseUpdate) {
+  const { db } = requireFirebase();
+  const payload: Record<string, unknown> = {
+    customerName: input.customerName, email: input.email, customerEmail: input.email,
+    programId: input.programId, productId: input.programId,
+    programName: input.programName, productName: input.programName,
+    status: input.status, active: input.status === 'active', updatedAt: serverTimestamp(),
+  };
+  if (input.expiresAt !== undefined) payload.expiresAt = input.expiresAt;
+  await updateDoc(doc(db, 'hwidLicenses', id), payload);
 }
 
 export async function setHwidLicenseStatus(id: string, status: HwidLicenseStatus) {

@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Ban, Check, Copy, KeyRound, Link2, LoaderCircle, Monitor, Plus, RotateCcw, Search, Trash2 } from 'lucide-react';
+import { Ban, Check, Copy, KeyRound, Link2, LoaderCircle, Monitor, Pencil, Plus, RotateCcw, Search, Trash2 } from 'lucide-react';
 import { visiblePrograms } from '@/lib/mock-data';
-import { createHwidLicense, removeHwidLicense, resetHwidLicense, setHwidLicenseStatus, subscribeHwidLicenses, type HwidLicense } from '@/lib/firebase/hwid';
+import { createHwidLicense, removeHwidLicense, resetHwidLicense, setHwidLicenseStatus, subscribeHwidLicenses, updateHwidLicense, type HwidLicense } from '@/lib/firebase/hwid';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select';
@@ -21,6 +21,22 @@ function expired(license: HwidLicense) {
   return Boolean(license.expiresAt && new Date(license.expiresAt).getTime() < Date.now());
 }
 
+type DurationOption = 'keep' | '3d' | '5d' | '7d' | '15d' | '1m' | 'permanent';
+
+function expiryFromDuration(duration: DurationOption): Date | null | undefined {
+  if (duration === 'keep') return undefined;
+  if (duration === 'permanent') return null;
+  const expiry = new Date();
+  if (duration === '1m') expiry.setMonth(expiry.getMonth() + 1);
+  else expiry.setDate(expiry.getDate() + Number.parseInt(duration, 10));
+  expiry.setHours(23, 59, 59, 999);
+  return expiry;
+}
+
+function DurationSelect({ value, onChange, allowKeep = false }: { value: DurationOption; onChange: (value: DurationOption) => void; allowKeep?: boolean }) {
+  return <NativeSelect value={value} onChange={(event) => onChange(event.target.value as DurationOption)}>{allowKeep && <NativeSelectOption value="keep">ไม่เปลี่ยนอายุ</NativeSelectOption>}<NativeSelectOption value="3d">3 วัน</NativeSelectOption><NativeSelectOption value="5d">5 วัน</NativeSelectOption><NativeSelectOption value="7d">7 วัน</NativeSelectOption><NativeSelectOption value="15d">15 วัน</NativeSelectOption><NativeSelectOption value="1m">1 เดือน</NativeSelectOption><NativeSelectOption value="permanent">ถาวร</NativeSelectOption></NativeSelect>;
+}
+
 export function HwidManager() {
   const [licenses, setLicenses] = useState<HwidLicense[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,9 +46,12 @@ export function HwidManager() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [machineFilter, setMachineFilter] = useState('all');
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editing, setEditing] = useState<HwidLicense | null>(null);
   const [busy, setBusy] = useState('');
   const [pendingDelete, setPendingDelete] = useState<HwidLicense | null>(null);
-  const [form, setForm] = useState({ licenseKey: '', customerName: '', email: '', programId: visiblePrograms[0]?.id || '', expiresAt: '' });
+  const [form, setForm] = useState({ licenseKey: '', customerName: '', email: '', programId: visiblePrograms[0]?.id || '', duration: '15d' as DurationOption });
+  const [editForm, setEditForm] = useState({ customerName: '', email: '', programId: visiblePrograms[0]?.id || '', duration: 'keep' as DurationOption, status: 'active' as 'active' | 'disabled' });
 
   useEffect(() => {
     let unsubscribe = () => {};
@@ -60,9 +79,16 @@ export function HwidManager() {
   }), [licenses, machineFilter, query, statusFilter]);
 
   function startCreate() {
-    setForm({ licenseKey: generateLicenseKey(), customerName: '', email: '', programId: visiblePrograms[0]?.id || '', expiresAt: '' });
+    setForm({ licenseKey: generateLicenseKey(), customerName: '', email: '', programId: visiblePrograms[0]?.id || '', duration: '15d' });
     setMessage('');
     setOpen(true);
+  }
+
+  function startEdit(license: HwidLicense) {
+    setEditing(license);
+    setEditForm({ customerName: license.customerName, email: license.email, programId: license.programId || visiblePrograms[0]?.id || '', duration: 'keep', status: license.status });
+    setMessage('');
+    setEditOpen(true);
   }
 
   async function submit(event: FormEvent) {
@@ -71,9 +97,23 @@ export function HwidManager() {
     if (!program) return;
     setBusy('create'); setError('');
     try {
-      await createHwidLicense({ ...form, programName: program.name });
+      await createHwidLicense({ ...form, programName: program.name, expiresAt: expiryFromDuration(form.duration) ?? null });
       setOpen(false); setMessage('เพิ่มไลเซนส์เรียบร้อยแล้ว');
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'เพิ่มไลเซนส์ไม่สำเร็จ'); }
+    finally { setBusy(''); }
+  }
+
+  async function submitEdit(event: FormEvent) {
+    event.preventDefault();
+    if (!editing) return;
+    const program = visiblePrograms.find((item) => item.id === editForm.programId);
+    if (!program) return;
+    const target = editing;
+    setBusy(target.id); setError('');
+    try {
+      await updateHwidLicense(target.id, { ...editForm, programName: program.name, expiresAt: expiryFromDuration(editForm.duration) });
+      setEditOpen(false); setEditing(null); setMessage('แก้ไขและต่ออายุไลเซนส์เรียบร้อยแล้ว');
+    } catch (reason) { setError(reason instanceof Error ? reason.message : 'แก้ไขไลเซนส์ไม่สำเร็จ'); }
     finally { setBusy(''); }
   }
 
@@ -96,11 +136,12 @@ export function HwidManager() {
         {!loading && filtered.length === 0 && <tr><td colSpan={6} className="hwid-empty">ยังไม่มีไลเซนส์ที่ตรงกับตัวกรอง</td></tr>}
         {filtered.map((license) => {
           const isExpired = expired(license); const isBusy = busy === license.id;
-          return <tr key={license.id}><td><button className="license-key-copy" onClick={() => void navigator.clipboard.writeText(license.licenseKey)} title="คัดลอก License Key"><code>{license.licenseKey}</code><Copy/></button></td><td><strong>{license.customerName}</strong><small>{license.email || 'ไม่มีอีเมล'} · {license.programName}</small></td><td>{license.hwid ? <code className="hwid-code"><Link2/>{license.hwid}</code> : <span className="unlinked">ยังไม่ผูกเครื่อง</span>}</td><td>{license.expiresAt ? new Date(license.expiresAt).toLocaleDateString('th-TH') : 'ไม่หมดอายุ'}</td><td><span className={`hwid-status ${isExpired ? 'expired' : license.status}`}>{isExpired ? 'หมดอายุ' : license.status === 'active' ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</span></td><td><div className="hwid-actions"><Button variant="outline" size="sm" disabled={isBusy || !license.hwid} onClick={() => void run(license.id, () => resetHwidLicense(license.id), 'รีเซ็ตเครื่องเรียบร้อยแล้ว')}><RotateCcw/> รีเซ็ต</Button><Button variant="outline" size="sm" disabled={isBusy} onClick={() => void run(license.id, () => setHwidLicenseStatus(license.id, license.status === 'active' ? 'disabled' : 'active'), 'อัปเดตสถานะเรียบร้อยแล้ว')}>{license.status === 'active' ? <Ban/> : <Check/>}{license.status === 'active' ? 'ปิด' : 'เปิด'}</Button><Button variant="destructive" size="icon-sm" disabled={isBusy} onClick={() => setPendingDelete(license)} aria-label={`ลบไลเซนส์ ${license.licenseKey}`}><Trash2/></Button></div></td></tr>;
+          return <tr key={license.id}><td><button className="license-key-copy" onClick={() => void navigator.clipboard.writeText(license.licenseKey)} title="คัดลอก License Key"><code>{license.licenseKey}</code><Copy/></button></td><td><strong>{license.customerName}</strong><small>{license.email || 'ไม่มีอีเมล'} · {license.programName}</small></td><td>{license.hwid ? <code className="hwid-code"><Link2/>{license.hwid}</code> : <span className="unlinked">ยังไม่ผูกเครื่อง</span>}</td><td>{license.expiresAt ? new Date(license.expiresAt).toLocaleDateString('th-TH') : 'ไม่หมดอายุ'}</td><td><span className={`hwid-status ${isExpired ? 'expired' : license.status}`}>{isExpired ? 'หมดอายุ' : license.status === 'active' ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</span></td><td><div className="hwid-actions"><Button variant="outline" size="sm" disabled={isBusy || !license.hwid} onClick={() => void run(license.id, () => resetHwidLicense(license.id), 'รีเซ็ตเครื่องเรียบร้อยแล้ว')}><RotateCcw/> รีเซ็ต</Button><Button variant="outline" size="sm" disabled={isBusy} onClick={() => startEdit(license)}><Pencil/> แก้ไข</Button><Button variant="outline" size="sm" disabled={isBusy} onClick={() => void run(license.id, () => setHwidLicenseStatus(license.id, license.status === 'active' ? 'disabled' : 'active'), 'อัปเดตสถานะเรียบร้อยแล้ว')}>{license.status === 'active' ? <Ban/> : <Check/>}{license.status === 'active' ? 'ปิด' : 'เปิด'}</Button><Button variant="destructive" size="icon-sm" disabled={isBusy} onClick={() => setPendingDelete(license)} aria-label={`ลบไลเซนส์ ${license.licenseKey}`}><Trash2/></Button></div></td></tr>;
         })}
       </tbody></table></div>
     </section>
-    <Dialog open={open} onOpenChange={setOpen}><DialogContent className="hwid-dialog"><DialogHeader><DialogTitle>เพิ่มไลเซนส์ใหม่</DialogTitle><DialogDescription>สร้างคีย์สำหรับผูกกับเครื่องของลูกค้า</DialogDescription></DialogHeader><form onSubmit={submit} className="hwid-form"><label>License Key<Input required value={form.licenseKey} onChange={(event) => setForm({ ...form, licenseKey: event.target.value.trim().toUpperCase() })}/></label><div><label>ชื่อลูกค้า<Input required value={form.customerName} onChange={(event) => setForm({ ...form, customerName: event.target.value })} placeholder="ชื่อผู้ใช้งาน"/></label><label>อีเมล<Input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="name@example.com"/></label></div><div><label>โปรแกรม<NativeSelect value={form.programId} onChange={(event) => setForm({ ...form, programId: event.target.value })}>{visiblePrograms.map((program) => <NativeSelectOption value={program.id} key={program.id}>{program.name}</NativeSelectOption>)}</NativeSelect></label><label>วันหมดอายุ <small>(เว้นว่าง = ถาวร)</small><Input type="date" value={form.expiresAt} onChange={(event) => setForm({ ...form, expiresAt: event.target.value })}/></label></div><DialogFooter><Button type="button" variant="outline" onClick={() => setOpen(false)}>ยกเลิก</Button><Button type="submit" disabled={busy === 'create'}>{busy === 'create' ? <LoaderCircle className="spin"/> : <Plus/>} สร้างไลเซนส์</Button></DialogFooter></form></DialogContent></Dialog>
+    <Dialog open={open} onOpenChange={setOpen}><DialogContent className="hwid-dialog"><DialogHeader><DialogTitle>เพิ่มไลเซนส์ใหม่</DialogTitle><DialogDescription>สร้างคีย์สำหรับผูกกับเครื่องของลูกค้า</DialogDescription></DialogHeader><form onSubmit={submit} className="hwid-form"><label>License Key<Input required value={form.licenseKey} onChange={(event) => setForm({ ...form, licenseKey: event.target.value.trim().toUpperCase() })}/></label><div><label>ชื่อลูกค้า<Input required value={form.customerName} onChange={(event) => setForm({ ...form, customerName: event.target.value })} placeholder="ชื่อผู้ใช้งาน"/></label><label>อีเมล<Input required type="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="name@example.com"/></label></div><div><label>โปรแกรม<NativeSelect value={form.programId} onChange={(event) => setForm({ ...form, programId: event.target.value })}>{visiblePrograms.map((program) => <NativeSelectOption value={program.id} key={program.id}>{program.name}</NativeSelectOption>)}</NativeSelect></label><label>อายุไลเซนส์<DurationSelect value={form.duration} onChange={(duration) => setForm({ ...form, duration })}/></label></div><DialogFooter><Button type="button" variant="outline" onClick={() => setOpen(false)}>ยกเลิก</Button><Button type="submit" disabled={busy === 'create'}>{busy === 'create' ? <LoaderCircle className="spin"/> : <Plus/>} สร้างไลเซนส์</Button></DialogFooter></form></DialogContent></Dialog>
+    <Dialog open={editOpen} onOpenChange={(next) => { setEditOpen(next); if (!next) setEditing(null); }}><DialogContent className="hwid-dialog"><DialogHeader><DialogTitle>แก้ไขและต่ออายุไลเซนส์</DialogTitle><DialogDescription>{editing?.licenseKey} · การต่ออายุจะนับรอบใหม่จากวันที่บันทึก</DialogDescription></DialogHeader><form onSubmit={submitEdit} className="hwid-form"><div><label>ชื่อลูกค้า<Input required value={editForm.customerName} onChange={(event) => setEditForm({ ...editForm, customerName: event.target.value })}/></label><label>อีเมล<Input required type="email" value={editForm.email} onChange={(event) => setEditForm({ ...editForm, email: event.target.value })}/></label></div><div><label>โปรแกรม<NativeSelect value={editForm.programId} onChange={(event) => setEditForm({ ...editForm, programId: event.target.value })}>{visiblePrograms.map((program) => <NativeSelectOption value={program.id} key={program.id}>{program.name}</NativeSelectOption>)}</NativeSelect></label><label>สถานะ<NativeSelect value={editForm.status} onChange={(event) => setEditForm({ ...editForm, status: event.target.value as 'active' | 'disabled' })}><NativeSelectOption value="active">เปิดใช้งาน</NativeSelectOption><NativeSelectOption value="disabled">ปิดใช้งาน</NativeSelectOption></NativeSelect></label></div><label>ต่ออายุ<DurationSelect allowKeep value={editForm.duration} onChange={(duration) => setEditForm({ ...editForm, duration })}/></label><DialogFooter><Button type="button" variant="outline" onClick={() => setEditOpen(false)}>ยกเลิก</Button><Button type="submit" disabled={Boolean(editing && busy === editing.id)}>{editing && busy === editing.id ? <LoaderCircle className="spin"/> : <Pencil/>} บันทึกการแก้ไข</Button></DialogFooter></form></DialogContent></Dialog>
     <AlertDialog open={Boolean(pendingDelete)} onOpenChange={(next) => !next && setPendingDelete(null)}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>ลบไลเซนส์นี้หรือไม่?</AlertDialogTitle><AlertDialogDescription>คีย์ {pendingDelete?.licenseKey} จะไม่สามารถใช้งานได้อีก การดำเนินการนี้ย้อนกลับไม่ได้</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>ยกเลิก</AlertDialogCancel><AlertDialogAction variant="destructive" onClick={() => { if (!pendingDelete) return; const target = pendingDelete; setPendingDelete(null); void run(target.id, () => removeHwidLicense(target.id), 'ลบไลเซนส์เรียบร้อยแล้ว'); }}>ลบไลเซนส์</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
   </>;
 }
