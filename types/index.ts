@@ -22,4 +22,5 @@ export interface SoftwareProgram {
   changelog: string[];
   accent: string;
   image?: string;
+  downloadUrl?: string;
 }

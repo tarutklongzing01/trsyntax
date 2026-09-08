@@ -42,7 +42,7 @@ export function MySoftwareClient() {
   return <div className="license-list">{allowed.map((program) => {
     const order = orders.find((item) => (item.productId || item.programId) === program.id);
     const licenseLabel = program.type === 'FREE' ? 'FREE LICENSE' : (order?.licenseKey || order?.key || 'PURCHASED');
-    return <article key={program.id}><span className="license-icon">{program.name.slice(0, 2)}</span><div><p>{program.category}</p><h2>{program.name}</h2><small>Latest Version: {program.version}</small></div><div className="license-status"><KeyRound/><span>{licenseLabel}</span></div><Link className="btn btn-primary" href={`/software/${program.slug}`}><Download/> Download</Link></article>;
+    return <article key={program.id}><span className="license-icon">{program.name.slice(0, 2)}</span><div><p>{program.category}</p><h2>{program.name}</h2><small>Latest Version: {program.version}</small></div><div className="license-status"><KeyRound/><span>{licenseLabel}</span></div>{program.downloadUrl ? <a className="btn btn-primary" href={program.downloadUrl} target="_blank" rel="noopener noreferrer"><Download/> Download</a> : <Link className="btn btn-primary" href={`/software/${program.slug}`}><Download/> Download</Link>}</article>;
   })}</div>;
 }
 

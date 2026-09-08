@@ -2,14 +2,15 @@ import type { SoftwareProgram } from '@/types';
 
 export const programs: SoftwareProgram[] = [
   {
-    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.4.0', image: '/images/tr-syntax-dl-v1.4.0.png',
+    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.5.6', image: '/images/tr-syntax-dl-v1.5.6.png',
+    downloadUrl: 'https://drive.google.com/file/d/1YdxJsbGQ_Lq7jSEElg4agPvWKgAapjWr/view?usp=drive_link',
     description: 'ดาวน์โหลดวิดีโอและเพลงจาก YouTube เป็น MP3 / MP4',
     longDescription: 'โปรแกรมดาวน์โหลดวิดีโอและเพลงจาก YouTube ที่ใช้งานง่าย รองรับ MP3 และ MP4 พร้อมเลือกคุณภาพวิดีโอ คุณภาพเสียง และโฟลเดอร์ปลายทางได้ตามต้องการ',
     category: 'Downloader', platform: 'Windows 10 / 11', price: 0, type: 'FREE', status: 'UPDATED',
-    fileSize: '24.8 MB', releaseDate: '18 ส.ค. 2026', updatedAt: '18 ส.ค. 2026', developer: 'TR-SYNTAX',
-    features: ['ดาวน์โหลดวิดีโอ MP4', 'แยกเสียงเป็น MP3', 'เลือกคุณภาพวิดีโอและเสียง', 'ดูประวัติการดาวน์โหลด'],
+    fileSize: '24.8 MB', releaseDate: '8 ก.ย. 2026', updatedAt: '8 ก.ย. 2026', developer: 'TR-SYNTAX',
+    features: ['ดาวน์โหลดวิดีโอ MP4', 'แยกเสียงเป็น MP3', 'เลือกคุณภาพวิดีโอและเสียง', 'ดูประวัติการดาวน์โหลดและรายการอัปเดต'],
     requirements: ['Windows 10 / 11 (64-bit)', 'RAM 4 GB ขึ้นไป', 'เชื่อมต่ออินเทอร์เน็ต'],
-    changelog: ['ปรับระบบดึงข้อมูลวิดีโอ', 'เพิ่มตัวเลือกคุณภาพเสียง', 'ปรับปรุงความเสถียร', 'ปรับ UI'], accent: '#ef4444',
+    changelog: ['เพิ่มหน้ารวมประวัติการเปลี่ยนแปลงของแต่ละเวอร์ชัน', 'นำปุ่มเปิด UVR Online ออกจากหน้าแยกเสียง', 'ปรับการจัดวางหน้าแยกเสียงให้ใช้พื้นที่เต็มความกว้าง'], accent: '#ef4444',
   },
   {
     id: 'pdf-merger', name: 'PDF Merger', slug: 'pdf-merger', version: 'v1.0.0', image: '/images/pdf-merger.png',
