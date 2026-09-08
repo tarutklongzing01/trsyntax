@@ -3,6 +3,11 @@ import type { SoftwareProgram } from '@/types';
 export const programs: SoftwareProgram[] = [
   {
     id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.5.6', image: '/images/tr-syntax-dl-v1.5.6.png',
+    screenshots: [
+      { src: '/images/tr-syntax-dl/download.png', alt: 'หน้าดาวน์โหลดวิดีโอและเพลงของ TR-SYNTAX DL', label: 'ดาวน์โหลดวิดีโอและเพลง' },
+      { src: '/images/tr-syntax-dl/audio-separation.png', alt: 'หน้าแยกเสียงของ TR-SYNTAX DL', label: 'แยกเสียงออกจากเพลง' },
+      { src: '/images/tr-syntax-dl/history.png', alt: 'หน้าประวัติการดาวน์โหลดของ TR-SYNTAX DL', label: 'ประวัติการดาวน์โหลด' },
+    ],
     downloadUrl: 'https://drive.google.com/file/d/1YdxJsbGQ_Lq7jSEElg4agPvWKgAapjWr/view?usp=drive_link',
     description: 'ดาวน์โหลดวิดีโอและเพลงจาก YouTube เป็น MP3 / MP4',
     longDescription: 'โปรแกรมดาวน์โหลดวิดีโอและเพลงจาก YouTube ที่ใช้งานง่าย รองรับ MP3 และ MP4 พร้อมเลือกคุณภาพวิดีโอ คุณภาพเสียง และโฟลเดอร์ปลายทางได้ตามต้องการ',

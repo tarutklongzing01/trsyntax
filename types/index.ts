@@ -22,5 +22,10 @@ export interface SoftwareProgram {
   changelog: string[];
   accent: string;
   image?: string;
+  screenshots?: Array<{
+    src: string;
+    alt: string;
+    label: string;
+  }>;
   downloadUrl?: string;
 }

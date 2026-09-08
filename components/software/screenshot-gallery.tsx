@@ -1,8 +1,24 @@
 'use client';
 
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ZoomIn } from 'lucide-react';
+import type { SoftwareProgram } from '@/types';
 
-export function ScreenshotGallery({ name }: { name: string }) {
+export function ScreenshotGallery({ name, screenshots }: { name: string; screenshots?: SoftwareProgram['screenshots'] }) {
+  if (screenshots?.length) {
+    return <div className="screenshot-grid">{screenshots.map((screenshot) => <Dialog key={screenshot.src}>
+      <DialogTrigger className="screenshot-trigger real-screenshot-trigger" aria-label={`เปิดภาพ ${screenshot.label}`}>
+        <img className="gallery-thumbnail" src={screenshot.src} alt={screenshot.alt} />
+        <span className="gallery-overlay"><ZoomIn aria-hidden="true" />{screenshot.label}</span>
+      </DialogTrigger>
+      <DialogContent className="gallery-dialog real-gallery-dialog">
+        <DialogTitle>{name} — {screenshot.label}</DialogTitle>
+        <DialogDescription>ภาพหน้าจอจริงของ {name}</DialogDescription>
+        <img className="gallery-full-image" src={screenshot.src} alt={screenshot.alt} />
+      </DialogContent>
+    </Dialog>)}</div>;
+  }
+
   const labels = ['Main Workspace', 'Live Data View', 'Settings & Logs'];
   return <div className="screenshot-grid">{labels.map((label,i)=><Dialog key={label}>
     <DialogTrigger className="screenshot-trigger" aria-label={`เปิดภาพ ${label}`}>
