@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowUpRight, Download, Monitor } from 'lucide-react';
 import type { SoftwareProgram } from '@/types';
+import { DownloadButton } from './download-button';
 
 export function ProgramCard({ program }: { program: SoftwareProgram }) {
   const hasImage = Boolean(program.image);
@@ -17,7 +18,7 @@ export function ProgramCard({ program }: { program: SoftwareProgram }) {
         <div className="compat"><Monitor size={15} /> {program.platform}</div>
         <div className="price-row"><strong>{program.price === 0 ? 'ดาวน์โหลดฟรี' : `${program.price.toLocaleString('th-TH')} THB`}</strong></div>
         <div className="card-actions">
-          {program.downloadUrl ? <a className="btn btn-primary" href={program.downloadUrl} target="_blank" rel="noopener noreferrer"><Download size={17} /> ดาวน์โหลด</a> : <Link className="btn btn-primary" href={`/software/${program.slug}`}>{program.type === 'FREE' ? <Download size={17} /> : <span aria-hidden="true">฿</span>} {program.type === 'FREE' ? 'ดาวน์โหลด' : 'ซื้อเลย'}</Link>}
+          {program.downloadUrl ? <DownloadButton downloadUrl={program.downloadUrl} returnTo={`/software/${program.slug}`} /> : <Link className="btn btn-primary" href={`/software/${program.slug}`}>{program.type === 'FREE' ? <Download size={17} /> : <span aria-hidden="true">฿</span>} {program.type === 'FREE' ? 'ดาวน์โหลด' : 'ซื้อเลย'}</Link>}
           <Link className="btn btn-ghost" href={`/software/${program.slug}`}>รายละเอียด <ArrowUpRight size={16} /></Link>
         </div>
       </div>
