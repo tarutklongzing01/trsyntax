@@ -13,7 +13,7 @@ export default function Home() {
         <div className="hero-actions"><Link className="btn btn-primary btn-lg" href="/software">เลือกดูโปรแกรมทั้งหมด <ArrowRight size={18} /></Link><Link className="btn btn-outline btn-lg" href="#featured">ดูตัวอย่างโปรแกรม</Link></div>
         <div className="trust-line"><span><CheckCircle2 size={15} /> ไฟล์สะอาด</span><span><CheckCircle2 size={15} /> ไม่มีโฆษณา</span><span><CheckCircle2 size={15} /> อัปเดตต่อเนื่อง</span></div>
       </div>
-      <div className="app-showcase" aria-label="ตัวอย่างหน้าต่างโปรแกรม TR-SYNTAX DL"><div className="showcase-top"><span className="mini-brand">TR</span><b>TR-SYNTAX DL v1.5.6</b><div className="window-dots"><i /><i /><i /></div></div>
+      <div className="app-showcase" aria-label="ตัวอย่างหน้าต่างโปรแกรม TR-SYNTAX DL"><div className="showcase-top"><span className="mini-brand">TR</span><b>TR-SYNTAX DL v1.5.7</b><div className="window-dots"><i /><i /><i /></div></div>
         <div className="showcase-body"><div className="tool-rail"><i /><i /><i /><i /></div><div className="tuning-panel"><div className="panel-head"><span>DOWNLOAD QUEUE</span><small>LIVE PROGRESS</small></div><div className="chart-bars">{[48,70,58,88,74,96,81,66,77,53,69,42].map((h,i)=><i key={i} style={{height:`${h}%`}} />)}</div><div className="data-row"><span>FORMAT<strong>MP4</strong></span><span>QUALITY<strong>1080p</strong></span><span>PROGRESS<strong>100%</strong></span></div></div></div>
         <div className="showcase-status"><span><i /> DOWNLOAD COMPLETE</span><b>READY TO USE</b></div>
       </div>
