@@ -2,6 +2,7 @@ import { collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc, update
 import { getFirebase } from './client';
 
 export type HwidLicenseStatus = 'active' | 'disabled';
+export type HwidLicenseType = 'trial' | 'full';
 
 export interface HwidLicense {
   id: string;
@@ -12,6 +13,7 @@ export interface HwidLicense {
   programName: string;
   hwid: string;
   status: HwidLicenseStatus;
+  licenseType: HwidLicenseType;
   expiresAt: string;
   createdAt: Date | null;
 }
@@ -23,6 +25,7 @@ export interface NewHwidLicense {
   programId: string;
   programName: string;
   expiresAt: Date | null;
+  licenseType: HwidLicenseType;
 }
 
 export interface HwidLicenseUpdate {
@@ -64,6 +67,7 @@ function mapLicense(snapshot: QueryDocumentSnapshot<DocumentData>): HwidLicense 
     programName: data.programName || data.productName || data.softwareName || 'ไม่ระบุโปรแกรม',
     hwid: data.hwid || data.machineId || data.deviceId || '',
     status: active ? 'active' : 'disabled',
+    licenseType: data.licenseType === 'trial' ? 'trial' : 'full',
     expiresAt: expiry ? expiry.toISOString() : '',
     createdAt: asDate(data.createdAt),
   };
@@ -85,6 +89,7 @@ export async function createHwidLicense(input: NewHwidLicense) {
     programId: input.programId, productId: input.programId,
     programName: input.programName, productName: input.programName,
     hwid: '', machineId: '', status: 'active', active: true,
+    licenseType: input.licenseType,
     expiresAt: input.expiresAt,
     createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
   });

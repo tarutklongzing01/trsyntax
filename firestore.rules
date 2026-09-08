@@ -36,7 +36,8 @@ service cloud.firestore {
     }
 
     match /hwidLicenses/{id} {
-      allow read, write: if admin();
+      allow read: if admin() || (signedIn() && request.auth.token.email != null && resource.data.email == request.auth.token.email);
+      allow write: if admin();
     }
   }
 }
