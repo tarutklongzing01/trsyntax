@@ -2,7 +2,7 @@ import type { SoftwareProgram } from '@/types';
 
 export const programs: SoftwareProgram[] = [
   {
-    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.5.6', image: '/images/tr-syntax-dl-v1.5.6.png',
+    id: 'tr-syntax-dl', name: 'TR-SYNTAX DL', slug: 'tr-syntax-dl', version: 'v1.5.6', image: '/images/tr-syntax-dl/download.png',
     screenshots: [
       { src: '/images/tr-syntax-dl/download.png', alt: 'หน้าดาวน์โหลดวิดีโอและเพลงของ TR-SYNTAX DL', label: 'ดาวน์โหลดวิดีโอและเพลง' },
       { src: '/images/tr-syntax-dl/audio-separation.png', alt: 'หน้าแยกเสียงของ TR-SYNTAX DL', label: 'แยกเสียงออกจากเพลง' },
