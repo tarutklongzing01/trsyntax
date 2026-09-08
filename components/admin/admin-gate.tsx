@@ -8,7 +8,7 @@ import { useFirebaseUser } from '@/hooks/use-firebase-user';
 import { getFirebase } from '@/lib/firebase/client';
 import { AdminShell } from './admin-shell';
 
-export function AdminGate({ initialView = 'dashboard' }: { initialView?: 'dashboard' | 'hwid' }) {
+export function AdminGate({ initialView = 'dashboard' }: { initialView?: 'dashboard' | 'users' | 'hwid' }) {
   const { user, loading } = useFirebaseUser();
   const [role, setRole] = useState<string | null>(null);
   const [checkingRole, setCheckingRole] = useState(true);

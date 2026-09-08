@@ -24,6 +24,8 @@ async function syncUser(user: User, displayName?: string, isRegistration = false
     displayName: displayName || user.displayName || '',
     email: user.email,
     photoURL: user.photoURL || '',
+    provider: user.providerData.some((item) => item.providerId === 'google.com') ? 'google.com' : 'password',
+    lastLoginAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
 

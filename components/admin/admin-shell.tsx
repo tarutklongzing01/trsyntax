@@ -5,18 +5,19 @@ import { BarChart3, BookOpen, Boxes, Download, FolderTree, KeyRound, LayoutDashb
 import { programs } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
 import { HwidManager } from './hwid-manager';
+import { UserManager } from './user-manager';
 
 const nav = [
   ['Dashboard', LayoutDashboard, 'dashboard'], ['Programs', Boxes, ''], ['Categories', FolderTree, ''],
-  ['Versions', ListRestart, ''], ['Guides', BookOpen, ''], ['Users', Users, ''],
+  ['Versions', ListRestart, ''], ['Guides', BookOpen, ''], ['Users', Users, 'users'],
   ['HWID', KeyRound, 'hwid'], ['Downloads', Download, ''], ['Settings', Settings, ''],
 ] as const;
 
-export function AdminShell({ initialView = 'dashboard' }: { initialView?: 'dashboard' | 'hwid' }) {
-  const [view, setView] = useState<'dashboard' | 'hwid'>(initialView);
-  function changeView(target: 'dashboard' | 'hwid') {
+export function AdminShell({ initialView = 'dashboard' }: { initialView?: 'dashboard' | 'users' | 'hwid' }) {
+  const [view, setView] = useState<'dashboard' | 'users' | 'hwid'>(initialView);
+  function changeView(target: 'dashboard' | 'users' | 'hwid') {
     setView(target);
-    window.history.replaceState(null, '', target === 'hwid' ? '/admin/hwid' : '/admin');
+    window.history.replaceState(null, '', target === 'dashboard' ? '/admin' : `/admin/${target}`);
   }
   return <div className="admin-app">
     <aside className="admin-sidebar">
@@ -24,7 +25,7 @@ export function AdminShell({ initialView = 'dashboard' }: { initialView?: 'dashb
       <nav>{nav.map(([label, Icon, target]) => <button className={view === target ? 'active' : ''} key={label} onClick={() => target && changeView(target)}><Icon/>{label}</button>)}</nav>
       <div className="admin-user"><span>TS</span><div><strong>TR-SYNTAX Admin</strong><small>Firebase Admin</small></div></div>
     </aside>
-    <main className="admin-main">{view === 'hwid' ? <HwidManager/> : <Dashboard/>}</main>
+    <main className="admin-main">{view === 'hwid' ? <HwidManager/> : view === 'users' ? <UserManager/> : <Dashboard/>}</main>
   </div>;
 }
 

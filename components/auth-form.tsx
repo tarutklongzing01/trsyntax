@@ -14,10 +14,10 @@ const authMessages: Record<string, string> = {
   'auth/weak-password': 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร',
   'auth/popup-closed-by-user': 'ยกเลิกการเข้าสู่ระบบด้วย Google',
   'auth/operation-not-allowed': 'ยังไม่ได้เปิดผู้ให้บริการเข้าสู่ระบบใน Firebase',
+  'auth/unauthorized-domain': 'โดเมนนี้ยังไม่ได้รับอนุญาตใน Firebase Authentication',
 };
 
 export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
-  const googleAuthEnabled = process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_AUTH_ENABLED === 'true';
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -27,8 +27,11 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const [returnPath, setReturnPath] = useState('');
 
   useEffect(() => {
-    const requestedPath = new URLSearchParams(window.location.search).get('next');
-    if (requestedPath?.startsWith('/') && !requestedPath.startsWith('//')) setReturnPath(requestedPath);
+    const timer = window.setTimeout(() => {
+      const requestedPath = new URLSearchParams(window.location.search).get('next');
+      if (requestedPath?.startsWith('/') && !requestedPath.startsWith('//')) setReturnPath(requestedPath);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const run = async (action: () => Promise<unknown>) => {
@@ -53,7 +56,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     <label>อีเมล<div className="input-with-icon"><Mail/><input required value={email} onChange={(e)=>setEmail(e.target.value)} autoComplete="email" type="email" placeholder="name@example.com" /></div></label>
     <label>รหัสผ่าน<div className="input-with-icon"><LockKeyhole/><input required value={password} onChange={(e)=>setPassword(e.target.value)} autoComplete={mode==='login'?'current-password':'new-password'} type="password" minLength={6} placeholder="อย่างน้อย 6 ตัวอักษร" /></div></label>
     <Button className="auth-submit" type="submit" disabled={loading}>{loading?<LoaderCircle className="spin"/>:null}{mode==='login'?'เข้าสู่ระบบ':'สมัครสมาชิก'}</Button>
-    {googleAuthEnabled && <><div className="auth-or"><span>หรือ</span></div><Button className="google-button" type="button" variant="outline" disabled={loading} onClick={()=>void run(loginWithGoogle)}><span aria-hidden="true">G</span> ดำเนินการด้วย Google</Button></>}
+    <div className="auth-or"><span>หรือ</span></div><Button className="google-button" type="button" variant="outline" disabled={loading} onClick={()=>void run(loginWithGoogle)}><span aria-hidden="true">G</span> ดำเนินการด้วย Google</Button>
     {message&&<output className="form-message">{message}</output>}
     <p className="auth-switch">{mode==='login'?'ยังไม่มีบัญชี?':'มีบัญชีแล้ว?'} <Link href={`${mode==='login'?'/register':'/login'}${returnPath ? `?next=${encodeURIComponent(returnPath)}` : ''}`}>{mode==='login'?'สมัครสมาชิก':'เข้าสู่ระบบ'}</Link></p>
   </form>;
